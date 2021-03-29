@@ -132,14 +132,21 @@ def post_tank_level():
 
         tank_level = Level().load(jsonBody)
         mongo.db.levels.insert_one(tank_level)
+
+        now = datetime.now()
+        dt = now.strftime("%d/%m/%Y %H:%M:%S")
+
         return {
             "success": True,
-            "level_data": jsonBody
+            "msg": "data saved successfully",
+            "date": dt
         }
     except ValidationError as e:
         return e.messages, 400
 
 if __name__ == "__main__":
     app.run(
-        debug=True
+        debug=True,
+        host="192.168.1.7",
+        port=5000
     )
