@@ -32,6 +32,26 @@ int getWaterLevel() {
   return (int)random(10, 201);
 }
 
+String generatePostRequest(String route, String portNumber, int cLength, String pData) {
+  String requestType = "POST /" + route + " HTTP/1.1\r\n";
+  String hostInfo = "Host: 192.168.1.7:" + portNumber + "\r\n";
+  String contentType = "Content-Type: application/json\r\n";
+  String contentLength = "Content-Length: " + String(cLength) + "\r\n\r\n";
+  String postData = pData + "\r\n\r\n";
+
+  return requestType + hostInfo + contentType + contentLength + postData;
+}
+
+String generateCIPSend(int requestLength){
+  String cipSend = "AT+CIPSEND=" + String(requestLength) + "\r\n";
+  return cipSend;
+}
+
+String generatePost(int tankID, int waterLevel){
+  String post = "{\"tank_id\":" +String(tankID)+ ", \"water_level\":" +String(waterLevel)+ "}\r\n\r\n";
+  return post;
+}
+
 void setup() {
   // put your setup code here, to run once:
   Serial1.begin(115200);
@@ -55,24 +75,4 @@ void loop() {
 
   sendData(cipSend, 1000, DEBUG);
   sendData(postRequest, 5000, DEBUG);
-}
-
-String generatePostRequest(String route, String portNumber, int cLength, String pData) {
-  String requestType = "POST /" + route + " HTTP/1.1\r\n";
-  String hostInfo = "Host: 192.168.1.7:" + portNumber + "\r\n";
-  String contentType = "Content-Type: application/json\r\n";
-  String contentLength = "Content-Length: " + String(cLength) + "\r\n\r\n";
-  String postData = pData + "\r\n\r\n";
-
-  return requestType + hostInfo + contentType + contentLength + postData;
-}
-
-String generateCIPSend(int requestLength){
-  String cipSend = "AT+CIPSEND=" + String(requestLength) + "\r\n";
-  return cipSend;
-}
-
-String generatePost(int tankID, int waterLevel){
-  String post = "{\"tank_id\":" +String(tankID)+ ", \"water_level\":" +String(waterLevel)+ "}\r\n\r\n";
-  return post;
 }
