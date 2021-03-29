@@ -130,7 +130,7 @@ def post_tank_level():
             "percentage_full": percentage_full
         }
 
-        tank_level = Level().load(jsonify(jsonBody))
+        tank_level = Level().load(jsonBody)
         mongo.db.levels.insert_one(tank_level)
         return {
             "success": True,
