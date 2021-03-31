@@ -1,21 +1,25 @@
+#include <SoftwareSerial.h>
+
 #define DEBUG true
+
+SoftwareSerial esp(10, 11);
 
 int tank_id = 0;
 
 String sendData(String command, const int timeout, boolean debug) {
     String response = "";
     
-    Serial1.print(command); // send the read character to the Serial18266
+    esp.print(command); // send the read character to the esp8266
     
     long int time = millis();
     
     while( (time+timeout) > millis())
     {
-      while(Serial1.available())
+      while(esp.available())
       {
         
         // The esp has data so display its output to the serial window 
-        char c = Serial1.read(); // read the next character.
+        char c = esp.read(); // read the next character.
         response += c;
       }  
     }
@@ -54,13 +58,13 @@ String generatePost(int tankID, int waterLevel){
 
 void setup() {
   // put your setup code here, to run once:
-  Serial1.begin(115200);
   Serial.begin(115200);
+  esp.begin(115200);
   
   sendData("AT+RST\r\n", 10000, DEBUG);
-  sendData("AT+CWLAP\r\n", 10000, DEBUG);
-  sendData("AT+CWJAP=\"FLOW-WiFi\",\"Honeymad5\"\r\n", 5000, DEBUG);
-  sendData("AT+CIFSR\r\n", 3000, DEBUG);
+  //sendData("AT+CWLAP\r\n", 10000, DEBUG);
+  sendData("AT+CWJAP=\"<network name>\",\"<network password>\"\r\n", 5000, DEBUG);
+  //sendData("AT+CIFSR\r\n", 3000, DEBUG);
 }
 
 void loop() {
